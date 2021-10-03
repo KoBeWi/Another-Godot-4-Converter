@@ -20,10 +20,10 @@ class Script
             elsif not line.include?("func ") and line.match(%r{.+\(.*\)})
                 convert_constants(line)
                 line = MethodCall.new(line)
-            elsif line.include?("var") and type = line.match(%r{:\s*(?<name>\w+)}) || type = line.match(%r{\s+as\s+(?<name>\w+)})
-                line = line.gsub(type["name"], TYPE_CONVERSIONS.fetch(type["name"], type["name"]))
             elsif line.include?("setget")
                 setget_data = line.match %r{setget\s*(?<set>[^,]+)?,?\s*(?<get>.+)?}
+                tabs = Script.tabs(line)
+
                 line = setget_data.pre_match.strip + ":"
                 if setget_data["set"]
                     line << " set = #{setget_data["set"].chomp}"
@@ -35,6 +35,10 @@ class Script
                     line << " get = #{setget_data["get"].chomp}"
                 end
                 line << "\n"
+                line = tabs + line
+                redo
+            elsif line.include?("var") and type = line.match(%r{:\s*(?<name>\w+)}) || type = line.match(%r{\s+as\s+(?<name>\w+)})
+                line = line.gsub(type["name"], TYPE_CONVERSIONS.fetch(type["name"], type["name"]))
             elsif assign = line.match(%r{(?<property>\w+)\s*=\s*(?<value>\w+)})
                 convert_constants(line)
                 line = convert_assigns(line, assign["property"], assign["value"])
