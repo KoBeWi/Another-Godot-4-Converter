@@ -38,6 +38,8 @@ class Script
             elsif assign = line.match(%r{(?<property>\w+)\s*=\s*(?<value>\w+)})
                 convert_constants(line)
                 line = convert_assigns(line, assign["property"], assign["value"])
+            elsif line.match(%r{\w})
+                convert_constants(line)
             end
             line
         end
