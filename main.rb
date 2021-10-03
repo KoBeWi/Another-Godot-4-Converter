@@ -66,5 +66,3 @@ file_list.select{|f| File.extname(f) == ".tres"}.each do |resource|
     save_file(resource, file)
     i += 1
 end
-
-#unsupported: nested calls, multiline calls
