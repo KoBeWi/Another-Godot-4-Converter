@@ -1,8 +1,10 @@
+require 'fileutils'
+
 require "./conversion"
 require "./scene"
 require "./scripts"
 
-FILE_EXTENSIONS = [".tscn", ".tres", ".gd"]
+FILE_EXTENSIONS = [".tscn", ".tres", ".gd", ".shader"]
 
 def fetch_files(dir, list)
     for file in Dir.entries(dir) - [".", ".."]
@@ -30,6 +32,14 @@ def save_file(file, data)
     end
 end
 
+def rename_file(file, new_name)
+    if $DEBUG
+        FileUtils.cp(file, File.dirname(file) + "/DEBUG#" + File.basename(new_name))
+    else
+        File.rename(file, new_name)
+    end
+end
+
 $DEBUG = true if ARGV.delete("--debug")
 root = "."
 if i = ARGV.index("--path")
@@ -46,22 +56,28 @@ file_list.reject! {|file| file.include?("DEBUG#")}
 i = 1
 all = file_list.length
 
+file_list.select{|f| File.extname(f) == ".shader"}.each do |shader|
+    puts "Renaming file: #{shader} (#{i}/#{all})"
+    rename_file(shader, shader.chomp("shader") + "gdshader")
+    i += 1
+end
+
 file_list.select{|f| File.extname(f) == ".tscn"}.each do |scene|
-    puts "Current file: #{scene} (#{i}/#{all})"
+    puts "Converting file: #{scene} (#{i}/#{all})"
     file = Scene.new(scene)
     save_file(scene, file)
     i += 1
 end
 
 file_list.select{|f| File.extname(f) == ".gd"}.each do |script|
-    puts "Current file: #{script} (#{i}/#{all})"
+    puts "Converting file: #{script} (#{i}/#{all})"
     file = Script.new(File.readlines(script))
     save_file(script, file)
     i += 1
 end
 
 file_list.select{|f| File.extname(f) == ".tres"}.each do |resource|
-    puts "Current file: #{resource} (#{i}/#{all})"
+    puts "Converting file: #{resource} (#{i}/#{all})"
     file = Resource.new(File.readlines(resource))
     save_file(resource, file)
     i += 1
