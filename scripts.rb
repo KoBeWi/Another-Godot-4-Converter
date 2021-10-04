@@ -30,7 +30,12 @@ class MethodCall
         end
         stop = i
 
-        precall = line[0...start].lstrip.split(".")
+        j = start
+        while j > 0 and not line[j].match(/\s/)
+            j -= 1
+        end
+
+        precall = line[j + 1...start].split(".")
         if precall.length > 1
             @caller = precall[0...precall.size - 1].join(".")
             @method = precall.last
@@ -39,7 +44,7 @@ class MethodCall
         end
         @args = line[start + 1...stop - 1].split(%r{\s*,\s*})
         reduce_args
-        @tabs = Script.tabs(line)
+        @tabs = line[0..j]
         @remainder = line[stop...line.length]
 
         if @remainder.match(REGEX)

@@ -51,9 +51,16 @@ class Script
 
     def convert_constants(line)
         COLOR_RENAMES.each_pair do |from, to|
-            line.gsub!("Color.#{from}", "Color.#{to}")
+            convert_constant(line, "Color.#{from}", "Color.#{to}")
         end
+
+        convert_constant(line, "scancode", "keycode")
+        convert_constant(line, "Engine.editor_hint", "Engine.is_editor_hint()")
         # TODO: add more
+    end
+
+    def convert_constant(line, from, to)
+        line.gsub!(from, to)
     end
 
     def convert_assigns(line, property, value)
@@ -104,6 +111,9 @@ class MethodCall
         else
             convert_method("clip", "intersection")
             convert_method("empty", "is_empty")
+            convert_method("instance", "instantiate")
+            convert_method("rand_range", "randf_range")
+
             convert_method_with_caller(nil, "decimals", "step_decimals")
             # TODO: add more
         end
