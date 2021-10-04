@@ -17,7 +17,7 @@ class Script
             elsif line.include?("extends")
                 type = line.match(%r{extends (\w+)[:|\s]})[1]
                 line = line.gsub("extends #{type}", "extends #{TYPE_CONVERSIONS.fetch(type, type)}")
-            elsif not line.include?("func ") and line.match(%r{.+\(.*\)})
+            elsif not line.include?("func ") and line.match(MethodCall::REGEX)
                 convert_constants(line)
                 line = MethodCall.new(line)
             elsif line.include?("setget")

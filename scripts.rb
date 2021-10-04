@@ -14,6 +14,8 @@ class Script
 end
 
 class MethodCall
+    REGEX = %r{.+\(.*\)}
+
     def initialize(line)
         start = line.index("(")
         i = start + 1
@@ -39,6 +41,10 @@ class MethodCall
         reduce_args
         @tabs = Script.tabs(line)
         @remainder = line[stop...line.length]
+
+        if @remainder.match(REGEX)
+            @remainder = MethodCall.new(@remainder)
+        end
 
         do_conversions
     end
