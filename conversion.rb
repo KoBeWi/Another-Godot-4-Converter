@@ -37,8 +37,6 @@ class Script
                 line << "\n"
                 line = tabs + line
                 redo
-            elsif line.include?("var") and type = line.match(%r{:\s*(?<name>\w+)}) || type = line.match(%r{\s+as\s+(?<name>\w+)})
-                line = line.gsub(type["name"], TYPE_CONVERSIONS.fetch(type["name"], type["name"]))
             elsif assign = line.match(%r{(?<property>\w+)\s*=\s*(?<value>\w+)})
                 convert_constants(line)
                 line = convert_assigns(line, assign["property"], assign["value"])
@@ -49,7 +47,15 @@ class Script
         end
     end
 
+    def convert_hints(line)
+        if type = line.match(%r{:\s*(?<name>\w+)}) || type = line.match(%r{\s+as\s+(?<name>\w+)})
+            return line.gsub!(type["name"], TYPE_CONVERSIONS.fetch(type["name"], type["name"]))
+        end
+    end
+
     def convert_constants(line)
+        convert_hints(line)
+
         COLOR_RENAMES.each_pair do |from, to|
             convert_constant(line, "Color.#{from}", "Color.#{to}")
         end
@@ -108,6 +114,8 @@ class MethodCall
             # TODO: convert signal names
         elsif @method == "yield"
             @override = @tabs + "await #{@args[0]}.#{@args[1].gsub('"', "")}\n"
+        elsif @method == "new"
+            @caller = TYPE_CONVERSIONS.fetch(@caller, @caller)
         else
             convert_method("clip", "intersection")
             convert_method("empty", "is_empty")
