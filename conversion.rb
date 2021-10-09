@@ -14,7 +14,7 @@ class Script
                 line.insert(0, "@")
                 redo
                  # TODO: convert to new syntax
-            elsif line.include?("extends")
+            elsif line.include?("extends") and not line.include?(".gd")
                 type = line.match(%r{extends (\w+)[:|\s]})[1]
                 line = line.gsub("extends #{type}", "extends #{TYPE_CONVERSIONS.fetch(type, type)}")
             elsif not line.include?("func ") and line.match(MethodCall::REGEX)
