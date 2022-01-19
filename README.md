@@ -4,14 +4,14 @@ This is another converter for Godot 4 (see https://github.com/godotengine/godot-
 
 It supports:
 - scene converting (node type conversion, property conversion)
-- - sub-resource converting (same as above)
-- - support for changed defaults, e.g. if you had disabled RayCast2D, the converted scene will have `enabled = false`, because the default changed
+  - sub-resource converting (same as above)
+  - support for changed defaults, e.g. if you had disabled RayCast2D, the converted scene will have `enabled = false`, because the default changed
 - script conversion
-- - method, property and constant renames
-- - some methods got special treating, e.g. `object.connect(object2, "signal", "method")` will be converted to the cool new `object.signal.connect(object2.method)` syntax
-- - conversion of setters/getters to new syntax
-- - onready/tool/export conversion to annotations (just adds `@` bruh)
-- - built-in script conversion (the converter will extract the script and convert it normally)
+  - method, property and constant renames
+  - some methods got special treating, e.g. `object.connect(object2, "signal", "method")` will be converted to the cool new `object.signal.connect(object2.method)` syntax
+  - conversion of setters/getters to new syntax
+  - onready/tool/export conversion to annotations (just adds `@` bruh)
+  - built-in script conversion (the converter will extract the script and convert it normally)
 
 The script conversion might be wonky. It's difficult to properly convert scripts without writting a parser (I actually tried that, but alas failed). I did a test on a pretty big project and the converter doesn't break scripts at least.
 Script conversion doesn't (and most likely won't) support multiline method calls and nested calls (e.g. in `method1(method2())` only `method1` is handled) and probably some other weird stuff you can do with your code. If you followed code guidelines you should be fine (probably).
