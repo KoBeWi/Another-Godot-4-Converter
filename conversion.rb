@@ -153,6 +153,45 @@ class Node
     end
 end
 
+class Resource
+    def do_conversions
+        if @type == "ParticlesMaterial"
+            convert_particle_randomness("initial_velocity")
+            convert_particle_randomness("angular_velocity")
+            convert_particle_randomness("orbit_velocity")
+            # TODO: convert all of them
+        end
+    end
+    
+    def convert_particle_randomness(from)
+        original = nil
+        index = -1
+        random = nil
+
+        @lines.each.with_index do |line, i|
+            if line.class == Property
+                if line.name == from
+                    original = line
+                    index = i
+                elsif line.name == from + "_random"
+                    random = line
+                    break
+                end
+            end
+        end
+            
+        if original
+            original.name += "_min"
+            value = original.value.to_f
+            if random
+                value *= (1 + random.value.to_f)
+                @lines.delete(random)
+            end
+            @lines.insert(index + 1, Property.new("#{from}_max = #{value}"))
+        end
+    end
+end
+
 class Property
     def do_conversions
         ### Nodes

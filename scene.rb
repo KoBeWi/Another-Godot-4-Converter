@@ -50,7 +50,9 @@ class Scene
 end
 
 class Property
-    attr_reader :name
+    attr_accessor :name
+    attr_reader :value
+    
     def initialize(line)
         property = line.match %r{(?<name>[^=]+) = (?<value>.+)}
         @name = property["name"]
@@ -70,7 +72,7 @@ class Property
     end
 
     def to_s
-        "#{@name} = #{@value}\n"
+        "#{@name} = #{@value}\n" + @double.to_s
     end
 end
 
@@ -143,6 +145,8 @@ class Resource
                 property
             end
         end
+
+        do_conversions
     end
 
     def to_s
