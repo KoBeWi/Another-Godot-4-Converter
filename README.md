@@ -6,6 +6,7 @@ It supports:
 - scene converting (node type conversion, property conversion)
   - sub-resource converting (same as above)
   - support for changed defaults, e.g. if you had disabled RayCast2D, the converted scene will have `enabled = false`, because the default changed
+  - conversion of ParticlesMaterial randomness to the new min/max
 - script conversion
   - method, property and constant renames
   - some methods got special treating, e.g. `object.connect(object2, "signal", "method")` will be converted to the cool new `object.signal.connect(object2.method)` syntax
