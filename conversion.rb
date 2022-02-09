@@ -130,7 +130,6 @@ class MethodCall
 
     def convert_method(from, to)
         if @method == from
-            puts from
             @method = to
         end
     end
