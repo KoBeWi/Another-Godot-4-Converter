@@ -156,10 +156,17 @@ end
 class Resource
     def do_conversions
         if @type == "ParticlesMaterial"
-            convert_particle_randomness("initial_velocity")
+            convert_particle_randomness("angle")
             convert_particle_randomness("angular_velocity")
+            convert_particle_randomness("anim_offset")
+            convert_particle_randomness("anim_speed")
+            convert_particle_randomness("hue_variation")
+            convert_particle_randomness("initial_velocity")
+            convert_particle_randomness("linear_accel")
             convert_particle_randomness("orbit_velocity")
-            # TODO: convert all of them
+            convert_particle_randomness("radial_accel")
+            convert_particle_randomness("scale")
+            convert_particle_randomness("tangential_accel")
         end
     end
     
