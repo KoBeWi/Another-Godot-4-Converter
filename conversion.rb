@@ -144,13 +144,34 @@ end
 class Node
     def do_conversions
         add_missing_default("RayCast2D", "enabled", "false")
+        convert_texture_rect_stretch
         # TODO: add more
     end
 
     def add_missing_default(type, property, value)
-        if @type == type and not @lines.find{|line| line.class == Property and line.name == property}
+        if @type == type and not get_property(property)
             @lines << "#{property} = #{value}\n"
         end
+    end
+
+    def convert_texture_rect_stretch
+        return if @type != "TextureRect"
+
+        stretch_mode = 0
+        if property = get_property("stretch_mode")
+            stretch_mode = property.value.to_i
+        end
+
+        if stretch_mode == 0
+            if get_property("ignore_texture_size")&.value == "true"
+                stretch_mode = 0
+            else
+                stretch_mode = 4
+            end
+        else
+            stretch_mode -= 1
+        end
+        set_property_value("stretch_mode", stretch_mode, 0)
     end
 end
 
@@ -207,6 +228,7 @@ class Property
         convert_name("margin_top", "offset_top")
         convert_name("margin_right", "offset_right")
         convert_name("margin_bottom", "offset_bottom")
+        convert_name("expand", "ignore_texture_size")
         # TODO: add more
         
         ### Resources

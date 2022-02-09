@@ -51,7 +51,7 @@ end
 
 class Property
     attr_accessor :name
-    attr_reader :value
+    attr_accessor :value
     
     def initialize(line)
         property = line.match %r{(?<name>[^=]+) = (?<value>.+)}
@@ -96,12 +96,30 @@ class Node
                 Property.new(line)
             end
         end
+        @properties = @lines.select{|line| line.class == Property}
         
         do_conversions
     end
 
     def to_s
         @lines.collect(&:to_s)
+    end
+
+    def get_property(name)
+        @properties.find{|property| property.name == name}
+    end
+
+    def set_property_value(name, value, default = nil)
+        if default != nil and value == default
+            @lines.reject!{|line| line.class == Property and line.name == name}
+            return
+        end
+
+        if property = get_property(name)
+            property.value = value
+        else
+            @lines << "#{name} = #{value}\n"
+        end
     end
 end
 
