@@ -86,7 +86,8 @@ end
 
 class MethodCall
     def do_conversions
-        if @method == "connect"
+        case @method
+        when "connect"
             if @caller
                 @caller = [@caller, @args[0].gsub('"', "")].join "."
             else
@@ -112,9 +113,9 @@ class MethodCall
             @args.first.gsub!("self.", "")
 
             # TODO: convert signal names
-        elsif @method == "yield"
+        when "yield"
             @override = @tabs + "await #{@args[0]}.#{@args[1].gsub('"', "")}\n"
-        elsif @method == "new"
+        when "new"
             @caller = TYPE_CONVERSIONS.fetch(@caller, @caller)
         else
             convert_method("clip", "intersection")
@@ -129,6 +130,7 @@ class MethodCall
 
     def convert_method(from, to)
         if @method == from
+            puts from
             @method = to
         end
     end
