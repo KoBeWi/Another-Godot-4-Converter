@@ -8,6 +8,7 @@ It supports:
   - support for changed defaults, e.g. if you had disabled RayCast2D, the converted scene will have `enabled = false`, because the default changed
   - conversion of ParticlesMaterial randomness to the new min/max
   - conversion of TextureRect stretch_mode (the compat value was removed, so it's a special case)
+  - conversion of CapsuleShape2D/3D height. It's now independent from radius
 - script conversion
   - method, property and constant renames
   - some methods got special treating, e.g. `object.connect(object2, "signal", "method")` will be converted to the cool new `object.signal.connect(object2.method)` syntax

@@ -190,6 +190,7 @@ class Resource
             convert_particle_randomness("scale")
             convert_particle_randomness("tangential_accel")
         end
+        convert_capsule_height
     end
     
     def convert_particle_randomness(from)
@@ -218,6 +219,16 @@ class Resource
             end
             @lines.insert(index + 1, Property.new("#{from}_max = #{value}"))
         end
+    end
+
+    def convert_capsule_height
+        return if @type != "CapsuleShape2D"
+
+        height = get_property("height")&.value&.to_f || 20.0
+        radius = get_property("radius")&.value&.to_f || 10.0
+        height += radius * 2
+
+        set_property_value("height", height, 30.0)
     end
 end
 
