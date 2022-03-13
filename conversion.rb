@@ -65,6 +65,12 @@ class Script
             convert_constant(line, "Color.#{from}", "Color.#{to}")
         end
 
+        convert_constant(line, "rect_position", "position")
+        convert_constant(line, "rect_size", "size")
+        convert_constant(line, "rect_rotation", "rotation")
+        convert_constant(line, "rect_scale", "scale")
+        convert_constant(line, "rect_pivot_offset", "pivot_offset")
+
         convert_constant(line, "scancode", "keycode")
         convert_constant(line, "Engine.editor_hint", "Engine.is_editor_hint()")
         # TODO: add more
@@ -127,6 +133,7 @@ class MethodCall
             convert_method("empty", "is_empty")
             convert_method("instance", "instantiate")
             convert_method("rand_range", "randf_range")
+            convert_method("clamped", "limit_length")
 
             convert_method_with_caller(nil, "decimals", "step_decimals")
             # TODO: add more
