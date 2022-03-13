@@ -42,7 +42,7 @@ class Script
                 line << "\n"
                 line = tabs + line
                 redo
-            elsif assign = line.match(%r{(?<property>\w+)\s*=\s*(?<value>\w+)})
+            elsif assign = line.match(%r{(?<property>\w+)\s*=\s*(?<value>[\w\.]+)})
                 convert_constants(line)
                 line = convert_assigns(line, assign["property"], assign["value"])
             elsif line.match(%r{\w})
@@ -82,14 +82,16 @@ class Script
     end
 
     def convert_assigns(line, property, value)
-        return line if convert_assign(line, property, value, "pause_mode", "PAUSE_MODE_PROCESS", "process_mode", "PROCESS_MODE_ALWAYS") # TODO: other modes
+        return line if convert_assign(line, property, value, "pause_mode", "PAUSE_MODE_PROCESS", "process_mode", "PROCESS_MODE_ALWAYS")
+        return line if convert_assign(line, property, value, "pause_mode", "PAUSE_MODE_STOP", "process_mode", "PROCESS_MODE_PAUSABLE")
+        return line if convert_assign(line, property, value, "pause_mode", "PAUSE_MODE_INHERIT", "process_mode", "PROCESS_MODE_INHERIT")
         # TODO: add more
 
         line
     end
 
     def convert_assign(line, property, value, from_property, from_value, to_property, to_value)
-        if property == from_property and value == from_value
+        if property == from_property and value.end_with?(from_value)
             line.gsub!(from_property, to_property)
             line.gsub!(from_value, to_value)
         end
