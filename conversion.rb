@@ -72,6 +72,7 @@ class Script
         convert_constant(line, "rect_pivot_offset", "pivot_offset")
 
         convert_constant(line, "scancode", "keycode")
+        convert_constant(line, "KEY_CONTROL", "KEY_CTRL")
         convert_constant(line, "Engine.editor_hint", "Engine.is_editor_hint()")
         # TODO: add more
     end
@@ -128,6 +129,8 @@ class MethodCall
             @override = @tabs + "await #{@args[0]}.#{@args[1].gsub('"', "")}\n"
         when "new"
             @caller = TYPE_CONVERSIONS.fetch(@caller, @caller)
+        when "emit_signal"
+            @override = @tabs + "#{"#{@caller}." if @caller}#{@args[0].gsub('"', "")}.emit(#{@args[1..].join(", ")})\n"
         else
             convert_method("clip", "intersection")
             convert_method("empty", "is_empty")
