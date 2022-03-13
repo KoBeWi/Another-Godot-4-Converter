@@ -74,6 +74,7 @@ class Script
         convert_constant(line, "scancode", "keycode")
         convert_constant(line, "KEY_CONTROL", "KEY_CTRL")
         convert_constant(line, "Engine.editor_hint", "Engine.is_editor_hint()")
+        convert_constant(line, "VisualServer", "RenderingServer")
         # TODO: add more
     end
 
