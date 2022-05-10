@@ -53,10 +53,11 @@ class Property
     attr_accessor :name
     attr_accessor :value
     
-    def initialize(line)
+    def initialize(line, type)
         property = line.match %r{(?<name>[^=]+) = (?<value>.+)}
         @name = property["name"]
         @value = property["value"]
+        @type = type
         
         do_conversions
     end
@@ -93,7 +94,7 @@ class Node
             if not line.include?("=") or line.start_with?("[")
                 line
             else
-                Property.new(line)
+                Property.new(line, @type)
             end
         end
         @properties = @lines.select{|line| line.class == Property}
@@ -152,7 +153,7 @@ class Resource
             if not line.include?("=") or line.start_with?("[")
                 line
             else
-                property = Property.new(line)
+                property = Property.new(line, @type)
                 if property.name == "script/source"
                     @in_script = i
                     @script_property = property

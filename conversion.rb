@@ -235,7 +235,7 @@ class Resource
                 value *= (1 + random.value.to_f)
                 @lines.delete(random)
             end
-            @lines.insert(index + 1, Property.new("#{from}_max = #{value}"))
+            @lines.insert(index + 1, Property.new("#{from}_max = #{value}", @type))
         end
     end
 
@@ -262,10 +262,16 @@ class Property
         
         ### Resources
         convert_name("scancode", "keycode")
+        convert_name_for_type("loop", "loop_mode", "Animation") {|v| @value = v == "true" ? "1" : "0"}
         # TODO: here too
     end
 
     def convert_name(from, to)
         @name = to if @name == from
+    end
+
+    def convert_name_for_type(from, to, type)
+        @name = to if @type == type and @name == from
+        yield(@value) if block_given?
     end
 end
