@@ -271,7 +271,9 @@ class Property
     end
 
     def convert_name_for_type(from, to, type)
-        @name = to if @type == type and @name == from
-        yield(@value) if block_given?
+        if @type == type and @name == from
+            @name = to
+            yield(@value) if block_given?
+        end
     end
 end

@@ -90,8 +90,21 @@ class Node
             lines[0].sub!("type=\"#{type}\"", "type=\"#{@type}\"")
         end
 
-        @lines.collect! do |line|
-            if not line.include?("=") or line.start_with?("[")
+        @lines.collect!.with_index do |line, i|
+            if line.start_with?("__meta__")
+                @inside_meta = []
+                ""
+            elsif @inside_meta and line.start_with?('"_editor_description_":')
+                description = extract_string(i, line.index(":") + 2)
+                @inside_meta << "editor_description = " + description
+                ""
+            elsif @inside_meta and line == "}\n"
+                extract = @inside_meta
+                @inside_meta = nil
+                extract.join
+            elsif @inside_meta
+                ""
+            elsif not line.include?("=") or line.start_with?("[")
                 line
             else
                 Property.new(line, @type)
@@ -121,6 +134,21 @@ class Node
         else
             @lines << "#{name} = #{value}\n"
         end
+    end
+
+    def extract_string(line, from)
+        lines = [line]
+        10000.times do
+            if not @lines[line].end_with?("\"\n")
+                line += 1
+                lines << line
+            else
+                break
+            end
+        end
+        lines = lines.collect{|i| @lines[i]}
+        lines[0] = lines[0][from...]
+        lines.join
     end
 end
 
