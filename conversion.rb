@@ -263,6 +263,7 @@ class Property
         ### Resources
         convert_name("scancode", "keycode")
         convert_name_for_type("loop", "loop_mode", "Animation") {|v| @value = v == "true" ? "1" : "0"}
+        convert_name_for_type("extents", "size", "RectangleShape2D") {|v| v = v.match(%r{Vector2\( (?<x>[.[^,]]+), (?<y>[.[^\s]]+) \)}); @value = "Vector2( #{v[:x].to_f * 2}, #{v[:y].to_f * 2} )"}
         # TODO: here too
     end
 
