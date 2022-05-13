@@ -6,7 +6,11 @@ class Scene
         
         @lines = File.readlines(file)
         @lines.each.with_index do |line, i|
-            if CONST_LINES.find{|c| line.start_with?(c)}
+            if line.end_with?("{\n")
+                @in_brace = true
+            elsif @in_brace
+                @in_brace = !line.end_with?("}\n")
+            elsif CONST_LINES.find{|c| line.start_with?(c)}
                 if @in_node &.> 0
                     extract_node(i)
                     @in_node = nil
@@ -138,8 +142,8 @@ class Node
 
     def extract_string(line, from)
         lines = [line]
-        10000.times do
-            if not @lines[line].end_with?("\"\n")
+        while true
+            if line < @lines.length and not @lines[line].end_with?("\"\n")
                 line += 1
                 lines << line
             else
