@@ -58,7 +58,7 @@ class Property
     attr_accessor :value
     
     def initialize(line, type)
-        property = line.match %r{(?<name>[^=]+)[ ]?=[ ]?(?<value>.+)}
+        property = line.match %r{(?<name>[^=]+) = (?<value>.+)}
         @name = property["name"]
         @value = property["value"]
         @type = type
