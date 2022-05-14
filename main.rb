@@ -1,8 +1,9 @@
 require 'fileutils'
 
-require "./conversion"
+require "./utils"
 require "./scene"
 require "./scripts"
+require "./conversion"
 
 FILE_EXTENSIONS = [".godot", ".tscn", ".tres", ".gd", ".shader"]
 

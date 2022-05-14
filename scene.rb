@@ -67,12 +67,9 @@ class Property
     end
 
     def add_source(code)
-        if code.last.end_with?("\"\n") and not code.last.end_with?("\\\"\n")
-            code.last.chomp!("\"\n")
-            code.last << "\n"
-        end
+        code[0] = code.first.delete_prefix("\"")
+        code[-1] = code.last.delete_suffix("\"")
         
-        code[0] = code.first.to_s.reverse.chomp("script/source = \"".reverse).reverse
         @value = '"' + Script.new(code.collect{|line| line.gsub('\"', '"')}).to_s.collect{|line| line.end_with?("\n") ? line : line + "\n"}.join.gsub('"', '\"') + '"'
     end
 
@@ -82,6 +79,8 @@ class Property
 end
 
 class Node
+    include Utils
+
     def initialize(lines)
         @lines = lines
         @properties = []
@@ -139,59 +138,34 @@ class Node
             @lines << "#{name} = #{value}\n"
         end
     end
-
-    def extract_string(line, from)
-        lines = [line]
-        while true
-            if line < @lines.length and not @lines[line].end_with?("\"\n")
-                line += 1
-                lines << line
-            else
-                break
-            end
-        end
-        lines = lines.collect{|i| @lines[i]}
-        lines[0] = lines[0][from...]
-        lines.join
-    end
 end
 
 class Resource
+    include Utils
+
     def initialize(lines)
         @lines = lines
         @properties = []
+        skip_lines = 0
 
         type = lines[0].match(%r{type="([^"]+)"})[1]
         @type = TYPE_CONVERSIONS.fetch(type, type)
         lines[0].sub!("type=\"#{type}\"", "type=\"#{@type}\"")
 
         @lines.collect!.with_index do |line, i|
-            if @in_script
-                if (m1 = line == "\"\n") or line.match(%r{[^\\]\"})
-                    @script_property.add_source(@lines[@in_script..(m1 ? i - 1 : i)])
-                    @lines.slice! (@in_script + 1)..i
-                    @in_script = @script_property = nil
-                    next
-                end
-                next line
-            end
-            if @in_shader
-                if (m1 = line == "\"\n") or line.match(%r{[^\\]\"})
-                    @in_shader = false
-                end
-                next line
+            if skip_lines > 0
+                skip_lines -= 1
+                next
             end
 
             if not line.include?("=") or line.start_with?("[")
                 line
             else
                 property = Property.new(line, @type)
-                if property.name == "script/source"
-                    @in_script = i
-                    @script_property = property
-                end
-                if property.name == "code"
-                    @in_shader = true
+                if property.name == "script/source" or property.name == "code"
+                    code = extract_string(i, line.index("\"")).split("\n")
+                    skip_lines = code.length - 1
+                    property.add_source(code)
                 end
                 property
             end
