@@ -5,7 +5,7 @@ require "./scene"
 require "./scripts"
 require "./conversion"
 
-FILE_EXTENSIONS = [".godot", ".tscn", ".tres", ".gd", ".shader"]
+FILE_EXTENSIONS = [".tscn", ".tres", ".gd", ".shader"]
 
 def fetch_files(dir, list)
     for file in Dir.entries(dir) - [".", ".."]
@@ -77,7 +77,7 @@ file_list.select{|f| File.extname(f) == ".gd"}.each do |script|
     i += 1
 end
 
-file_list.select{|f| File.extname(f) == ".tres" or File.extname(f) == ".godot"}.each do |resource|
+file_list.select{|f| File.extname(f) == ".tres"}.each do |resource|
     puts "Converting file: #{resource} (#{i}/#{all})"
     file = Resource.new(File.readlines(resource))
     save_file(resource, file)

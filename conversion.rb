@@ -65,6 +65,12 @@ class Script
             convert_constant(line, "Color.#{from}", "Color.#{to}")
         end
 
+        convert_constant(line, "PoolIntArray", "PackedInt64Array")
+        convert_constant(line, "PoolRealArray", "PackedFloat32Array")
+        convert_constant(line, "PoolVector2Array", "PackedVector2Array")
+        convert_constant(line, "PoolVector3Array", "PackedVector3Array")
+        convert_constant(line, "PoolStringArray", "PackedStringArray")
+
         convert_constant(line, "rect_position", "position")
         convert_constant(line, "rect_size", "size")
         convert_constant(line, "rect_rotation", "rotation")

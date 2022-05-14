@@ -58,7 +58,7 @@ class Property
     attr_accessor :value
     
     def initialize(line, type)
-        property = line.match %r{(?<name>[^=]+) = (?<value>.+)}
+        property = line.match %r{(?<name>[^=]+)[ ]?=[ ]?(?<value>.+)}
         @name = property["name"]
         @value = property["value"]
         @type = type
@@ -148,8 +148,10 @@ class Resource
         @properties = []
         skip_lines = 0
 
-        type = lines[0].match(%r{type="([^"]+)"})[1]
-        @type = TYPE_CONVERSIONS.fetch(type, type)
+        type = lines[0].match(%r{type="([^"]+)"})
+        if type
+            @type = TYPE_CONVERSIONS.fetch(type[0], type[0])
+        end
         lines[0].sub!("type=\"#{type}\"", "type=\"#{@type}\"")
 
         @lines.collect!.with_index do |line, i|
@@ -158,7 +160,7 @@ class Resource
                 next
             end
 
-            if not line.include?("=") or line.start_with?("[")
+            if not line.include?("=") or line.start_with?("[") or line.start_with?(";")
                 line
             else
                 property = Property.new(line, @type)
