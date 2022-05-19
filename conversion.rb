@@ -263,7 +263,18 @@ class Property
         convert_name("margin_top", "offset_top")
         convert_name("margin_right", "offset_right")
         convert_name("margin_bottom", "offset_bottom")
+        convert_name("rect_min_size", "minimum_size")
         convert_name("expand", "ignore_texture_size")
+
+        convert_name_for_type("align", "horizontal_alignment", "Label")
+        convert_name_for_type("valign", "vertical_alignment", "Label")
+
+        convert_prefix("custom_styles/", "theme_override_styles/")
+        convert_prefix("custom_constants/", "theme_override_constants/")
+        convert_prefix("custom_colors/", "theme_override_colors/")
+        convert_prefix("custom_fonts/", "theme_override_fonts/")
+
+        convert_suffix("/font_outline_modulate", "/font_outline_color")
         # TODO: add more
         
         ### Resources
@@ -282,5 +293,13 @@ class Property
             @name = to
             yield(@value) if block_given?
         end
+    end
+
+    def convert_prefix(prefix, new_prefix)
+        @name.gsub!(prefix, new_prefix) if @name.start_with?(prefix)
+    end
+
+    def convert_suffix(prefix, new_prefix)
+        @name.gsub!(prefix, new_prefix) if @name.end_with?(prefix)
     end
 end
