@@ -38,6 +38,7 @@ Put the scripts anywhere and do
 ```
 ruby main.rb --path path/to/your/project
 ```
+The given path will be scanned recursively and compatible files will be converted. You can also specify a sub-folder or a single file you wish to convert.
 
 ### Debug usage
 Useful for testing the converter, but not intended for the actual projects. Instead of replacing files, it creates a copy prefixed with `DEBUG#`, so you can easily compare before and after changes.
