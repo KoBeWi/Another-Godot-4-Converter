@@ -50,7 +50,11 @@ if i = ARGV.index("--path")
 end
 
 file_list = []
-fetch_files(root, file_list)
+if not Dir.exists?(root) and File.exists?(root)
+    file_list = [root]
+else
+    fetch_files(root, file_list)
+end
 
 file_list.reject! {|file| file.include?("DEBUG#")}
 
