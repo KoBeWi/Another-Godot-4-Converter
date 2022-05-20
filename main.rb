@@ -1,9 +1,9 @@
 require 'fileutils'
 
-require "./utils"
-require "./scene"
-require "./scripts"
-require "./conversion"
+require_relative "utils"
+require_relative "scene"
+require_relative "scripts"
+require_relative "conversion"
 
 FILE_EXTENSIONS = [".tscn", ".tres", ".gd", ".shader"]
 
