@@ -32,6 +32,8 @@ class Scene
                     extract_node(i)
                     @in_node = -i
                 end
+            elsif line.start_with?("[connection")
+                @bits << line
             end
         end
 
@@ -150,7 +152,7 @@ class Resource
 
         type = lines[0].match(%r{type="([^"]+)"})
         if type
-            @type = TYPE_CONVERSIONS.fetch(type[0], type[0])
+            @type = TYPE_CONVERSIONS.fetch(type[1], type[1])
         end
         lines[0].sub!("type=\"#{type}\"", "type=\"#{@type}\"")
 

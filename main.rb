@@ -16,7 +16,9 @@ def fetch_files(dir, list)
         end
 
         if Dir.exists?(name)
-            fetch_files(name, list)
+            if not $NO_RECURSION
+                fetch_files(name, list)
+            end
         else
             if FILE_EXTENSIONS.include?(File.extname(name))
                 list << name
@@ -42,6 +44,8 @@ def rename_file(file, new_name)
 end
 
 $DEBUG = true if ARGV.delete("--debug")
+$NO_RECURSION = true if ARGV.delete("--no-recursion")
+
 root = "."
 if i = ARGV.index("--path")
     root = ARGV[i + 1]
