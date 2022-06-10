@@ -281,6 +281,10 @@ class Property
         convert_name("scancode", "keycode")
         convert_name_for_type("loop", "loop_mode", "Animation") {|v| @value = v == "true" ? "1" : "0"}
         convert_name_for_type("extents", "size", "RectangleShape2D") {|v| v = v.match(%r{Vector2\( (?<x>[.[^,]]+), (?<y>[.[^\s]]+) \)}); @value = "Vector2( #{v[:x].to_f * 2}, #{v[:y].to_f * 2} )"}
+        convert_name("flag_align_y", "particle_flag_align_y")
+        convert_name("flag_rotate_y", "particle_flag_rotate_y")
+        convert_name("flag_disable_z", "particle_flag_disable_z")
+        convert_name_for_type("emission_shape", "emission_shape", "ParticlesMaterial") {|v| @value = v.to_i + 1 if v.to_i >= 2}
         # TODO: here too
     end
 
