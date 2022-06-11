@@ -71,6 +71,7 @@ class Property
     def add_source(code)
         code[0] = code.first.delete_prefix("\"")
         code[-1] = code.last.delete_suffix("\"")
+        code.pop if code.last.empty?
         
         @value = '"' + Script.new(code.collect{|line| line.gsub('\"', '"')}).to_s.collect{|line| line.end_with?("\n") ? line : line + "\n"}.join.gsub('"', '\"') + '"'
     end
