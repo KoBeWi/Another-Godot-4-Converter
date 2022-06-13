@@ -10,6 +10,7 @@ It supports:
   - conversion of TextureRect stretch_mode (the compat value was removed, so it's a special case)
   - conversion of CapsuleShape2D/3D height. It's now independent from radius
   - extract of `editor_description` from metadata. The remaining metadata is discarded; it's not important
+  - conversion of `rotation_degrees` in Animation to `rotation` radians
 - script conversion
   - method, property and constant renames
   - some methods got special treating, e.g. `object.connect(object2, "signal", "method")` will be converted to the cool new `object.signal.connect(object2.method)` syntax
