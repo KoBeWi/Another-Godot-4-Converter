@@ -214,6 +214,7 @@ class Resource
             convert_particle_randomness("scale")
             convert_particle_randomness("tangential_accel")
         end
+        convert_anim_rotation
         convert_capsule_height
     end
     
@@ -253,6 +254,39 @@ class Resource
         height += radius * 2
 
         set_property_value("height", height, 30.0)
+    end
+
+    def convert_anim_rotation
+        return if @type != "Animation"
+        is_rotation = false
+        @lines.collect! do |line|
+            if not is_rotation
+                if line.class == Property and line.to_s.start_with?("tracks/0") and line.value.include?("rotation_degrees")
+                    line.value.gsub!("rotation_degrees", "rotation")
+                    is_rotation = true
+                end
+            else
+                if line.class == String and line.start_with?("\"values\"")
+                    pos = line.index("[")
+                    endpos = line.index("]")
+                    newline = line[0..pos]
+
+                    while pos < endpos
+                        pos += 1
+                        if index = line.index(",", pos)
+                            newline << "#{line[pos...index].to_f * (Math::PI / 180.0)},"
+                            pos = index
+                        else
+                            newline << "#{line[pos...endpos].to_i * (Math::PI / 180.0)}]"
+                            pos = endpos
+                        end
+                    end
+                    is_rotation = false
+                    line = newline
+                end
+            end
+            line
+        end
     end
 end
 
