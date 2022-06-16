@@ -23,7 +23,7 @@ Script conversion doesn't (and most likely won't) support multiline method calls
 
 ### NOTE
 
-The script had just basic functionality implemented, it converts only a very small number of stuff. Check the `# TODO` comments in the code to see what is missing (and planned). I tried to keep most of conversion in `conversion.rb` file.
+The script converts some of the most important stuff, but it was done with a focus on my project. Many things are still missing, especially in the 3D area. Check the `# TODO` comments in the code to see what is missing (and planned). I tried to keep most of conversion in `conversion.rb` file.
 
 ## How to use
 
