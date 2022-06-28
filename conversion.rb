@@ -217,7 +217,7 @@ class Resource
         convert_anim_rotation
         convert_capsule_height
     end
-    
+
     def convert_particle_randomness(from)
         original = nil
         index = -1
@@ -234,15 +234,26 @@ class Resource
                 end
             end
         end
-            
+        
         if original
-            original.name += "_min"
-            value = original.value.to_f
+            @lines.delete(original)
+            min = original.value.to_f
+            max = original.value.to_f
+
             if random
-                value *= (1 + random.value.to_f)
+                rnd = random.value.to_f
+                if original.name == "scale"
+                    min = 1 + (max - 1) * (1 - rnd)
+                elsif ["angular_velocity", "hue_variation"].include? original.name
+                    min *= (1 - rnd * 2)
+                else
+                    min *= (1 - rnd)
+                end
                 @lines.delete(random)
             end
-            @lines.insert(index + 1, Property.new("#{from}_max = #{value}", @type))
+
+            @lines.insert(index, Property.new("#{from}_min = #{min}", @type))
+            @lines.insert(index, Property.new("#{from}_max = #{max}", @type))
         end
     end
 
