@@ -253,7 +253,7 @@ class Resource
             end
 
             @lines.insert(index, Property.new("#{from}_min = #{min}", @type))
-            @lines.insert(index, Property.new("#{from}_max = #{max}", @type))
+            @lines.insert(index + 1, Property.new("#{from}_max = #{max}", @type))
         end
     end
 
