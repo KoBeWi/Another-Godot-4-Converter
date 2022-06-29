@@ -6,7 +6,7 @@ class Scene
         
         @lines = File.readlines(file)
         @lines.each.with_index do |line, i|
-            if line.end_with?("{\n")
+            if line.end_with?("{\n") and not @in_node
                 @in_brace = true
             elsif @in_brace
                 @in_brace = !line.end_with?("}\n")
