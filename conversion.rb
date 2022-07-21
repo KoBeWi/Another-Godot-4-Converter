@@ -272,7 +272,7 @@ class Resource
         is_rotation = false
         @lines.collect! do |line|
             if not is_rotation
-                if line.class == Property and line.to_s.start_with?("tracks/0") and line.value.include?("rotation_degrees")
+                if line.class == Property and line.to_s.start_with?("tracks/") and line.value.include?("rotation_degrees")
                     line.value.gsub!("rotation_degrees", "rotation")
                     is_rotation = true
                 end
