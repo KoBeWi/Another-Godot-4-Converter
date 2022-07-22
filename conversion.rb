@@ -304,6 +304,8 @@ end
 class Property
     def do_conversions
         ### Nodes
+        convert_name("cast_to", "target_position")
+
         convert_name("margin_left", "offset_left")
         convert_name("margin_top", "offset_top")
         convert_name("margin_right", "offset_right")
@@ -321,7 +323,7 @@ class Property
 
         convert_suffix("/font_outline_modulate", "/font_outline_color")
         # TODO: add more
-        
+
         ### Resources
         convert_name("scancode", "keycode")
         convert_name_for_type("loop", "loop_mode", "Animation") {|v| @value = v == "true" ? "1" : "0"}
