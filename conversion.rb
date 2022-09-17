@@ -146,6 +146,7 @@ class MethodCall
             convert_method("instance", "instantiate")
             convert_method("rand_range", "randf_range")
             convert_method("clamped", "limit_length")
+            convert_method("rand_range", "randf_range")
 
             convert_method_with_caller(nil, "decimals", "step_decimals")
             # TODO: add more
@@ -315,6 +316,7 @@ class Property
 
         convert_name_for_type("align", "horizontal_alignment", "Label")
         convert_name_for_type("valign", "vertical_alignment", "Label")
+        convert_name_for_type("autowrap", "autowrap_mode", "Label") {|v| @value = 2 if v == "true"}
 
         convert_prefix("custom_styles/", "theme_override_styles/")
         convert_prefix("custom_constants/", "theme_override_constants/")
