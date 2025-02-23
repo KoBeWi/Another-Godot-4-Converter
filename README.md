@@ -2,6 +2,14 @@
 
 This is another converter for Godot 4 (see https://github.com/godotengine/godot-proposals/issues/387 for list of converters). It's a script written in Ruby.
 
+---
+
+**Discontinued**
+
+I originally made this to convert [my project](https://store.steampowered.com/app/2609560?utm_source=GitHub&utm_medium=README&utm_campaign=Converter), and since I already finished doing it, and also 4 years have passed and Godot 4.4 is releasing soon, maintaining a converter to Godot 4.0 does not make sense anymore. You can still use it (together with the official one), but it won't be updated.
+
+---
+
 It supports:
 - scene converting (node type conversion, property conversion)
   - sub-resource converting (same as above)
